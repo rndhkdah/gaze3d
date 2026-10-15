@@ -63,3 +63,39 @@ Written and tested without the camera (it was unplugged): the tests, the end-to-
 (FaceLandmarker + ptgaze on CUDA, hit near the camera footprint for a face looking at the camera, ~12 ms per frame
 on the GPU), and the task headless with the laptop webcam (black frames, so NO FACE) including the screen
 recording. Not yet done: a live run, a calibration and the 12 trials on the monitor.
+
+## References
+
+Code that runs here (installed by `stack.sh setup`, not vendored):
+
+- **ptgaze** (hysts, MIT): gaze direction in the camera frame from a normalised face image; head pose by solvePnP on its
+  metric MediaPipe face template, normalisation after Zhang et al. 2018. https://github.com/hysts/pytorch_mpiigaze_demo
+- **ETH-XGaze ResNet-18 weights** (`hysts/ptgaze-eth-xgaze-resnet18` on the Hugging Face Hub), trained on ETH-XGaze
+  (Zhang et al., ECCV 2020, 18 cameras around the subject, so a camera below the screen is inside the training poses).
+  https://github.com/xucong-zhang/ETH-XGaze
+- **MediaPipe Face Landmarker** (Google, Apache-2.0): 478 landmarks with the irises at 468-477.
+  https://developers.google.com/edge/mediapipe/solutions/vision/face_landmarker
+- **pyrealsense2 / librealsense** (Intel, Apache-2.0): depth aligned to colour, colour intrinsics, depth scale.
+  https://github.com/IntelRealSense/librealsense
+- OpenCV, NumPy, pygame, PyTorch, timm, OmegaConf, SciPy, safetensors, huggingface-hub.
+
+Ideas borrowed (re-implemented here, no code copied):
+
+- **JEOresearch EyeTracker, Webcam3DTracker** (MIT): the gaze ray from the eye intersected with a monitor plane; there in
+  pixel units and only for a debug view, here with depth-measured eye positions and the real panel in millimetres.
+  The eye-aspect-ratio blink gate and the landmark index tables follow its MediaPipe variant.
+  https://github.com/JEOresearch/EyeTracker
+- **WebGazer** (Brown HCI, GPL-3.0; Papoutsaki et al., IJCAI 2016): ridge regression from a gaze feature to screen
+  coordinates as the per-user calibration; here a 9-dot affine ridge fit on the plane hit (`taskenv/calibrate.py`).
+  https://github.com/brownhci/WebGazer
+- **rgbd_gaze** (Andrej Orsula, BSD-3, ROS 2): the one earlier open RGB-D model-based gaze tracker, read for its
+  calibration layout. https://github.com/AndrejOrsula/rgbd_gaze
+- **One Euro filter** (Casiez, Roussel, Vogel, CHI 2012) for the on-screen smoothing (`taskenv/smoothing.py`).
+- The RealSense capture pattern (aligned depth, median patch, nose-bridge fallback) and the six-squares task come from
+  earlier trackers in the same workspace (MediaPipe + depth, then antoinelame/GazeTracking), which this tracker was built
+  to beat on the same task.
+
+Papers behind the models: Zhang, Park, Beeler, Bradley, Hilliges, "ETH-XGaze: A Large Scale Dataset for Gaze
+Estimation under Extreme Head Pose and Gaze Variation", ECCV 2020; Zhang, Sugano, Bulling, "Revisiting Data
+Normalization for Appearance-Based Gaze Estimation", ETRA 2018; Kartynnik et al., "Real-time Facial Surface Geometry
+from Monocular Video on Mobile GPUs" (MediaPipe Face Mesh), 2019.
