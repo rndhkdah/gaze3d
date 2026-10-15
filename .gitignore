@@ -1,0 +1,9 @@
+# environment and downloads (bash stack.sh setup recreates them)
+.venv/
+models/
+# session data: recordings of the user, calibrations, per-sample logs, camera files
+calib/
+# python
+__pycache__/
+*.pyc
+.pytest_cache/

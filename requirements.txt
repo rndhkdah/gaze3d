@@ -1,0 +1,16 @@
+# GAZE3D: RealSense D435i colour + depth, MediaPipe irises, ptgaze (ETH-XGaze) gaze direction, monitor-plane intersection.
+# torch / torchvision are installed first by stack.sh setup (the default PyPI wheels carry CUDA; 2.14.1+cu130 runs on the
+# RTX 5060). ptgaze is installed with --no-deps (its face-alignment and opencv-python pins are not needed: mediapipe
+# 1.1.0 brings opencv-contrib-python, and the face detector here is our own FaceLandmarker).
+numpy>=2.0
+mediapipe==1.1.0
+opencv-contrib-python>=4.10
+pyrealsense2>=2.55
+pygame>=2.6,<3
+scipy>=1.15
+omegaconf>=2.3
+timm>=1.0.15
+safetensors>=0.5
+huggingface-hub>=0.30
+pyyaml>=6
+pytest
